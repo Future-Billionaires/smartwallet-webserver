@@ -1,5 +1,5 @@
 // @generated automatically by Diesel CLI.
-
+// TODO: Currently using Varbinaries for salt and hashes, which shouldn't be required
 diesel::table! {
     credentials (id) {
         id -> Integer,

@@ -85,7 +85,7 @@ pub fn login(login_data: Json<LoginData>) -> Result<Json<User>, Custom<String>> 
     };
 
     println!("Found user with id: {}", user.id);
-
+ 
     let user_id: i32 = user.id;
 
     // Find the credentials that match that user id
@@ -94,9 +94,13 @@ pub fn login(login_data: Json<LoginData>) -> Result<Json<User>, Custom<String>> 
         .first::<Credentials>(connection)
         .expect("Failed to find credentials attached to the user (probably will never happen)");
 
+    // TODO: Optimize to a single query rather than two using a join
+
     let is_correct_password = hashing::verify_password(login_data.password.clone(), String::from_utf8(user_credentials.password_hash).unwrap(), String::from_utf8(user_credentials.salt).unwrap()); //TODO: Figure out why password_hash and salt are swapped
 
     println!("The user password was: {}", is_correct_password);
+
+    println!("{:?}", Json(&user));
 
     match is_correct_password {
         true => Ok(Json(user)),
